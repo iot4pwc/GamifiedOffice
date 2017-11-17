@@ -6,9 +6,7 @@ public abstract class Activity {
 	//store general info of current activity
 	String ActivityName;
 	String GainPerUnit;
-	//String topic 
 
-	//?
 	int UnitOfMeasure;
 	
 	//for individual activity
@@ -17,4 +15,7 @@ public abstract class Activity {
 	//for group activity
 	public abstract double calculateScore();
 
+	public String getName(){
+		return this.ActivityName;
+	}
 }

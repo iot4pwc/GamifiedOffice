@@ -22,5 +22,8 @@ public class ConstLib {
 	public static final String MQTT_TLS_VERSION = "TLSv1.2";
 	public static final String MQTT_CLIENT_ID = "iot4pwc";
 	public static final int MQTT_QUALITY_OF_SERVICE = 2;
+	
+//topics
+	public static final String TOPIC_WATERINTAKE = "/gamified_office/rfid";
 
 }

@@ -3,6 +3,7 @@ package gamiOffice.components.general;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.*;
 
 import gamiOffice.components.activities.Activity;
@@ -71,5 +72,9 @@ public class Challenge {
 	
 	public void setEmployeeInvolved(List<JsonObject> scores){
 		
+	}
+	
+	public Map<Activity, Double> getWeight(){
+		return this.Weight;
 	}
 }
