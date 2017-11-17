@@ -22,10 +22,15 @@ public class ConstLib {
 	public static final String MQTT_TLS_VERSION = "TLSv1.2";
 	public static final String MQTT_CLIENT_ID = "iot4pwc";
 	public static final int MQTT_QUALITY_OF_SERVICE = 2;
-	
-//topics
+	//topics
 	public static final String TOPIC_WATERINTAKE = "/gamified_office/rfid";
 
+	public static final int HTTP_SERVER_PORT= 8090;
+	public static final String PASSWORD_FIELD = "password";
+	public static final String USERNAME_URL_PATTERN = "user";
+	public static final String CHALLENGE_URL_PATTERN = "challenge";
 
+	public static final String REQUIRED_HEADER_KEY = "secretKey";
+	public static final String REQUIRED_HEADER_VALUE = "secretValue";
 	public static final Double CHALLENGE_INITIAL_SCORE = 0.0;
 }
