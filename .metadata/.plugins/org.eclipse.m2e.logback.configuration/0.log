@@ -1,0 +1,36 @@
+2017-11-17 13:53:17,404 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:53:17,404 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:53:17,405 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:53:17,406 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:55:37,488 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:55:37,490 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:55:37,491 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:55:37,491 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:56:14,208 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:14,210 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:56:14,211 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:14,211 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:56:17,568 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:17,569 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:56:17,570 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:17,570 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:56:19,606 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:19,606 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:56:19,607 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:19,607 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:56:24,086 [Worker-35] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:24,086 [Worker-35] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:56:24,088 [Worker-35] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:24,088 [Worker-35] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:56:25,693 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:25,693 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:56:25,693 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:25,694 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:56:27,678 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:27,678 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:56:27,679 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:27,679 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
+2017-11-17 13:56:39,969 [Worker-36] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:39,969 [Worker-36] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/main/resources
+2017-11-17 13:56:39,970 [Worker-36] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-11-17 13:56:39,970 [Worker-36] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/sjhermanek/Documents/GitHub/GamifiedOffice/gamiOffice/src/test/resources
