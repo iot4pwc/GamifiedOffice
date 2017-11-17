@@ -2,9 +2,7 @@ package gamiOffice.components.activities;
 
 import gamiOffice.components.general.User;
 
-public class SittingDuration extends Activity{
-
-	public static final String COMPONENT_CODE = "SittingDuration";
+public class WaterIntake extends Activity{
 
 	@Override
 	public double calculateScore(User u) {
@@ -17,5 +15,5 @@ public class SittingDuration extends Activity{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 }

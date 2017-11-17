@@ -1,7 +1,6 @@
 package gamiOffice.components.general;
 
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.*;
 import gamiOffice.components.activities.Activity;
 import gamiOffice.components.activities.SittingDuration;
@@ -170,4 +169,5 @@ public class Challenge {
       }
     }
   }
+
 }
