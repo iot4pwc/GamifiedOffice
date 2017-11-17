@@ -3,11 +3,9 @@ package gamiOffice.verticles;
 import gamiOffice.components.helper.DBHelper;
 import gamiOffice.constants.ConstLib;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.net.PemKeyCertOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -27,6 +25,9 @@ public class RESTService extends AbstractVerticle {
       /**
        * input the restful endpoint here
        */
+      //Filter
+      router.route("/*").handler(this::filter);
+      
       router.route().handler(BodyHandler.create());
       router.post("/:" + ConstLib.USERNAME_URL_PATTERN + "/login").handler(this::login);
       router.get("/:" + ConstLib.USERNAME_URL_PATTERN + "/profile").handler(this::getProfile);
@@ -48,6 +49,26 @@ public class RESTService extends AbstractVerticle {
     dbHelper.closeDatasource();
   }
 
+  private void filter(RoutingContext routingContext) {
+    MultiMap headers = routingContext.request().headers();
+    if (headers.contains(ConstLib.REQUIRED_HEADER_KEY)) {
+      if (headers.get(ConstLib.REQUIRED_HEADER_KEY).equals(ConstLib.REQUIRED_HEADER_VALUE)) {
+        routingContext.next();
+      } else {
+        routingContext.response()
+        .putHeader("content-type", "application/json; charset=utf-8")
+        .setStatusCode(400)
+        .end();
+      }
+    }
+    else {
+      routingContext.response()
+      .putHeader("content-type", "application/json; charset=utf-8")
+      .setStatusCode(400)
+      .end();
+    }
+  }
+  
   private void login(RoutingContext routingContext) {
     JsonObject body = routingContext.getBodyAsJson();
     String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);

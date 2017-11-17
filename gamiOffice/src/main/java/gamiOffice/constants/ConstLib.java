@@ -27,5 +27,8 @@ public class ConstLib {
         public static final String PASSWORD_FIELD = "password";
         public static final String USERNAME_URL_PATTERN = "user";
         public static final String CHALLENGE_URL_PATTERN = "challenge";
+        
+        public static final String REQUIRED_HEADER_KEY = "secretKey";
+        public static final String REQUIRED_HEADER_VALUE = "secretValue";
 
 }
