@@ -6,6 +6,7 @@ public abstract class Activity {
 	//store general info of current activity
 	String ActivityName;
 	String GainPerUnit;
+	//String topic 
 
 	//?
 	int UnitOfMeasure;

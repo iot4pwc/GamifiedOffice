@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.*;
 
 import gamiOffice.components.activities.Activity;
+import io.vertx.core.json.JsonObject;
 
 public class Challenge {
 	private static final double INITIAL_SCORE = 0.0;
@@ -17,7 +18,7 @@ public class Challenge {
 	Date ChallengeStartDate;
 	Date ChallengeEndDate;
 	
-	Challenge(String name, String id){
+	public Challenge(String name, String id){
 		this.ChallengeName = name;
 		//?or can be auto set
 		this.ChallengeId = id;
@@ -58,8 +59,17 @@ public class Challenge {
 		return records;
 	}
 	
-	public void setWeight(){
+	public void setWeight(List<JsonObject> weights){
+		//read from a JsonString in directory when called and populate the map
+		
+	}
+	
+	public void setWeight(String filename){
 		//read from a static file in directory when called and populate the map
+		
+	}
+	
+	public void setEmployeeInvolved(List<JsonObject> scores){
 		
 	}
 }
