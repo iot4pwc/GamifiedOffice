@@ -12,178 +12,187 @@ import io.vertx.ext.web.handler.BodyHandler;
 
 public class RESTService extends AbstractVerticle {
 
-  private DBHelper dbHelper;
+	private DBHelper dbHelper;
 
-  @Override
-  public void start() {
-    Router router = Router.router(vertx);
+	@Override
+	public void start() {
+		Router router = Router.router(vertx);
 
-    vertx.executeBlocking(future -> {
-      dbHelper = DBHelper.getInstance(ConstLib.GAMIFIED_OFFICE);
-      future.complete();
-    }, response -> {
-      /**
-       * input the restful endpoint here
-       */
-      //Filter
-      router.route("/*").handler(this::filter);
-      
-      router.route().handler(BodyHandler.create());
-      router.post("/:" + ConstLib.USERNAME_URL_PATTERN + "/login").handler(this::login);
-      router.get("/:" + ConstLib.USERNAME_URL_PATTERN + "/profile").handler(this::getProfile);
-      router.post("/:" + ConstLib.USERNAME_URL_PATTERN + "/profile").handler(this::updateProfile);
-      router.get("/:" + ConstLib.CHALLENGE_URL_PATTERN + "/:" + ConstLib.USERNAME_URL_PATTERN + "/getRanking").handler(this::getUserStatsInChallenge);
-      router.get("/:" + ConstLib.CHALLENGE_URL_PATTERN + "/getRanking").handler(this::getChallengeStats);
-      router.get("/:" + ConstLib.USERNAME_URL_PATTERN + "/getRecentStats").handler(this::getUserRecentStats);
-      router.get("/:" + ConstLib.USERNAME_URL_PATTERN + "/getFullStats").handler(this::getUserFullStats);
+		vertx.executeBlocking(future -> {
+			dbHelper = DBHelper.getInstance(ConstLib.GAMIFIED_OFFICE);
+			future.complete();
+		}, response -> {
+			/**
+			 * input the restful endpoint here
+			 */
+			//Filter
+			router.route("/*").handler(this::filter);
 
-      //add any addtional routers below
-      vertx.createHttpServer().requestHandler(router::accept).listen(ConstLib.HTTP_SERVER_PORT);
-      System.out.println("RESTful service running on port " + ConstLib.HTTP_SERVER_PORT);
-    });
+			router.route().handler(BodyHandler.create());
+			router.post("/:" + ConstLib.USERNAME_URL_PATTERN + "/login").handler(this::login);
+			router.get("/:" + ConstLib.USERNAME_URL_PATTERN + "/profile").handler(this::getProfile);
+			router.post("/:" + ConstLib.USERNAME_URL_PATTERN + "/profile").handler(this::updateProfile);
+			router.get("/:" + ConstLib.CHALLENGE_URL_PATTERN + "/:" + ConstLib.USERNAME_URL_PATTERN + "/getRanking").handler(this::getUserStatsInChallenge);
+			router.get("/:" + ConstLib.CHALLENGE_URL_PATTERN + "/getRanking").handler(this::getChallengeStats);
+			router.get("/:" + ConstLib.USERNAME_URL_PATTERN + "/getRecentStats").handler(this::getUserRecentStats);
+			router.get("/:" + ConstLib.USERNAME_URL_PATTERN + "/getFullStats").handler(this::getUserFullStats);
 
-  }
+			//add any addtional routers below
+			vertx.createHttpServer().requestHandler(router::accept).listen(ConstLib.HTTP_SERVER_PORT);
+			System.out.println("RESTful service running on port " + ConstLib.HTTP_SERVER_PORT);
+		});
 
-  @Override
-  public void stop() {
-    dbHelper.closeDatasource();
-  }
+	}
 
-  private void filter(RoutingContext routingContext) {
-    MultiMap headers = routingContext.request().headers();
-    if (headers.contains(ConstLib.REQUIRED_HEADER_KEY)) {
-      if (headers.get(ConstLib.REQUIRED_HEADER_KEY).equals(ConstLib.REQUIRED_HEADER_VALUE)) {
-        routingContext.next();
-      } else {
-        routingContext.response()
-        .putHeader("content-type", "application/json; charset=utf-8")
-        .setStatusCode(400)
-        .end();
-      }
-    }
-    else {
-      routingContext.response()
-      .putHeader("content-type", "application/json; charset=utf-8")
-      .setStatusCode(400)
-      .end();
-    }
-  }
-  
-  private void login(RoutingContext routingContext) {
-    JsonObject body = routingContext.getBodyAsJson();
-    String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
-    String password = body.getString(ConstLib.PASSWORD_FIELD);
+	@Override
+	public void stop() {
+		dbHelper.closeDatasource();
+	}
 
-    //TODO: Call login method here to check credentials (true for now)
-    boolean flag = true;
+	private void filter(RoutingContext routingContext) {
+		MultiMap headers = routingContext.request().headers();
+		if (headers.contains(ConstLib.REQUIRED_HEADER_KEY)) {
+			if (headers.get(ConstLib.REQUIRED_HEADER_KEY).equals(ConstLib.REQUIRED_HEADER_VALUE)) {
+				routingContext.next();
+			} else {
+				routingContext.response()
+				.putHeader("content-type", "application/json; charset=utf-8")
+				.setStatusCode(400)
+				.end();
+			}
+		}
+		else {
+			routingContext.response()
+			.putHeader("content-type", "application/json; charset=utf-8")
+			.setStatusCode(400)
+			.end();
+		}
+	}
 
-    if (flag) {
-      routingContext.response()
-            .setStatusCode(200)
-              .end();
-    } else {
-      routingContext.response()
-            .setStatusCode(400)
-              .end();
-    }
-  }
+	private void login(RoutingContext routingContext) {
+		JsonObject body = routingContext.getBodyAsJson();
+		String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
+		String password = body.getString(ConstLib.PASSWORD_FIELD);
 
-  private void getProfile(RoutingContext routingContext) {
-    String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
+		//TODO: Call login method here to check credentials (true for now)
+		boolean flag = true;
 
-    //TODO: Get profile call here (hard coded for now)
-    JsonObject profile = new JsonObject().put("name", "Bob").put("alias", "shiningBlackHole");
+		if (flag) {
 
-    routingContext.response()
-            .putHeader("content-type", "application/json; charset=utf-8")
-            .setStatusCode(200)
-            .end(profile.encodePrettily());
-  }
+			//TODO: Get all related challanges for the given user.
+			JsonObject allChallenges = new JsonObject();
+			JsonArray allIndividualChallenges = new JsonArray();
+			allIndividualChallenges.add(new JsonObject().put("challenge_id", "1"));
+			allIndividualChallenges.add(new JsonObject().put("challenge_id", "3"));
+			allChallenges.put("all_challenges", allIndividualChallenges);
 
-  private void updateProfile(RoutingContext routingContext) {
-    String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
+			routingContext.response()
+			.setStatusCode(200)
+			.end(allChallenges.encodePrettily());
+			
+		} else {
+			routingContext.response()
+			.setStatusCode(400)
+			.end();
+		}
+	}
 
-    //TODO: Update profile call here (returns a boolean success flag)
-    boolean isSuccess = true;
+	private void getProfile(RoutingContext routingContext) {
+		String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
 
-    if (isSuccess) {
-      routingContext.response()
-              .setStatusCode(200)
-              .end();
-    } else {
-      routingContext.response()
-              .setStatusCode(400)
-              .end();
-    }
-  }
+		//TODO: Get profile call here (hard coded for now)
+		JsonObject profile = new JsonObject().put("name", "Bob").put("alias", "shiningBlackHole");
 
-  private void getUserStatsInChallenge(RoutingContext routingContext) {
-    String challenge = routingContext.request().getParam(ConstLib.CHALLENGE_URL_PATTERN);
-    String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
+		routingContext.response()
+		.putHeader("content-type", "application/json; charset=utf-8")
+		.setStatusCode(200)
+		.end(profile.encodePrettily());
+	}
 
-    //Get ranking call here (hardcoded for now)
-    JsonObject rank = new JsonObject()
-            .put("rank", 4)
-            .put("total_score", 87)
-            .put("water_intake_score", 56)
-            .put("sitting_score", 96);
+	private void updateProfile(RoutingContext routingContext) {
+		String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
 
-    routingContext.response()
-            .putHeader("content-type", "application/json; charset=utf-8")
-            .setStatusCode(200)
-            .end(rank.encodePrettily());
+		//TODO: Update profile call here (returns a boolean success flag)
+		boolean isSuccess = true;
 
-  }
+		if (isSuccess) {
+			routingContext.response()
+			.setStatusCode(200)
+			.end();
+		} else {
+			routingContext.response()
+			.setStatusCode(400)
+			.end();
+		}
+	}
 
-  private void getChallengeStats(RoutingContext routingContext) {
-    String challenge = routingContext.request().getParam(ConstLib.CHALLENGE_URL_PATTERN);
+	private void getUserStatsInChallenge(RoutingContext routingContext) {
+		String challenge = routingContext.request().getParam(ConstLib.CHALLENGE_URL_PATTERN);
+		String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
 
-    //Get ranking call here (hardcoded for now)
-    JsonArray rankArr = new JsonArray()
-            .add(new JsonObject().put("alias", "runningFish").put("rank", 1).put("total_score", 106))
-            .add(new JsonObject().put("alias", "changingMask").put("rank", 2).put("total_score", 103));
-    JsonObject rank = new JsonObject().put("rank", rankArr);
+		//Get ranking call here (hardcoded for now)
+		JsonObject rank = new JsonObject()
+				.put("rank", 4)
+				.put("total_score", 87)
+				.put("water_intake_score", 56)
+				.put("sitting_score", 96);
 
-    routingContext.response()
-            .putHeader("content-type", "application/json; charset=utf-8")
-            .setStatusCode(200)
-            .end(rank.encodePrettily());
+		routingContext.response()
+		.putHeader("content-type", "application/json; charset=utf-8")
+		.setStatusCode(200)
+		.end(rank.encodePrettily());
 
-  }
+	}
 
-  private void getUserRecentStats(RoutingContext routingContext) {
-    String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
+	private void getChallengeStats(RoutingContext routingContext) {
+		String challenge = routingContext.request().getParam(ConstLib.CHALLENGE_URL_PATTERN);
 
-    //Get ranking call here (hardcoded for now)
-    JsonObject rank = new JsonObject()
-            .put("rank", 4)
-            .put("total_score", 87)
-            .put("water_intake_score", 56)
-            .put("sitting_score", 96);
+		//Get ranking call here (hardcoded for now)
+		JsonArray rankArr = new JsonArray()
+				.add(new JsonObject().put("alias", "runningFish").put("rank", 1).put("total_score", 106))
+				.add(new JsonObject().put("alias", "changingMask").put("rank", 2).put("total_score", 103));
+		JsonObject rank = new JsonObject().put("rank", rankArr);
 
-    routingContext.response()
-            .putHeader("content-type", "application/json; charset=utf-8")
-            .setStatusCode(200)
-            .end(rank.encodePrettily());
+		routingContext.response()
+		.putHeader("content-type", "application/json; charset=utf-8")
+		.setStatusCode(200)
+		.end(rank.encodePrettily());
 
-  }
-  
-    private void getUserFullStats(RoutingContext routingContext) {
-    String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
+	}
 
-    //Get ranking call here (hardcoded for now)
-    JsonObject rank = new JsonObject()
-            .put("rank", 4)
-            .put("today", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24))
-            .put("yesterday", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24))
-            .put("last_week", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24))
-            .put("last_month", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24));
+	private void getUserRecentStats(RoutingContext routingContext) {
+		String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
 
-    routingContext.response()
-            .putHeader("content-type", "application/json; charset=utf-8")
-            .setStatusCode(200)
-            .end(rank.encodePrettily());
+		//Get ranking call here (hardcoded for now)
+		JsonObject rank = new JsonObject()
+				.put("rank", 4)
+				.put("total_score", 87)
+				.put("water_intake_score", 56)
+				.put("sitting_score", 96);
 
-  }
+		routingContext.response()
+		.putHeader("content-type", "application/json; charset=utf-8")
+		.setStatusCode(200)
+		.end(rank.encodePrettily());
+
+	}
+
+	private void getUserFullStats(RoutingContext routingContext) {
+		String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
+
+		//Get ranking call here (hardcoded for now)
+		JsonObject rank = new JsonObject()
+				.put("rank", 4)
+				.put("today", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24))
+				.put("yesterday", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24))
+				.put("last_week", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24))
+				.put("last_month", new JsonObject().put("total_score", 34).put("water_intake_score", 54).put("sitting_score", 24));
+
+		routingContext.response()
+		.putHeader("content-type", "application/json; charset=utf-8")
+		.setStatusCode(200)
+		.end(rank.encodePrettily());
+
+	}
 
 }
