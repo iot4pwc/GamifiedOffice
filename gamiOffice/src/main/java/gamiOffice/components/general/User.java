@@ -4,7 +4,10 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import gamiOffice.components.activities.Activity;
+import gamiOffice.components.activities.SittingDuration;
 import gamiOffice.components.activities.WaterIntake;
+import gamiOffice.components.helper.DBHelper;
+import io.vertx.core.json.JsonObject;
 
 public class User {
   //Employee basic information
@@ -64,21 +67,57 @@ public class User {
   public void setAlias(String alias) {
     Alias = alias;
   }
-  
+
   public List<String> getActivitySensor(String activityName){
-  	for(Entry<Activity, List<String>> e : ActivityMap.entrySet()){
-  		if(e.getKey().getName().equals(activityName)){
-  			return e.getValue();
-  		}
-  	}
-  	
-  	return new ArrayList<String>();
+    for(Entry<Activity, List<String>> e : ActivityMap.entrySet()){
+      if(e.getKey().getName().equals(activityName)){
+        return e.getValue();
+      }
+    }
+
+    return new ArrayList<String>();
   }
 
   public void populateActivity(){
-  	ArrayList<String> sensors = new ArrayList<>();
-  	sensors.add("9025298");
-  	sensors.add("19414433");
-  	ActivityMap.put(new WaterIntake(), sensors);
+    ArrayList<String> sensors = new ArrayList<>();
+
+
+    // Get user information first.
+    List<JsonObject> result = DBHelper.getInstance("gamified_office").select(
+        "SELECT challenge_component.component_code, user_component_sensor.sensor_value "
+            + "FROM  challenge_component "
+            + "JOIN user_component_sensor "
+            + "USING (component_code) "
+            + "WHERE user_component_sensor.email = '" + this.Email + "';");
+    
+    System.out.println(result);
+
+    for (JsonObject aResult: result) {
+      Activity anActivity = null;
+      switch (aResult.getString("component_code")) {
+        case WaterIntake.COMPONENT_CODE:
+          anActivity = new WaterIntake();
+          break;
+        case SittingDuration.COMPONENT_CODE:
+          anActivity = new SittingDuration();
+          break;
+        default:
+          System.out.println("No matching activity found.");
+          break;
+      }
+
+      if (anActivity != null) {
+        List<String> mappedSensors;
+        if (!ActivityMap.containsKey(anActivity)) {
+          mappedSensors = new LinkedList<String>();
+        } else {
+          mappedSensors = ActivityMap.get(anActivity);
+        }
+        mappedSensors.add(aResult.getString("sensor_value"));
+        this.ActivityMap.put(anActivity, mappedSensors);
+      }
+    }
+    System.out.println(ActivityMap.keySet().toString());
+    System.out.println(ActivityMap.values().toString());
   }
 }
