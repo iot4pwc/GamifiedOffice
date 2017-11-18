@@ -1,8 +1,10 @@
 package gamiOffice.components.general;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import gamiOffice.components.activities.Activity;
+import gamiOffice.components.activities.WaterIntake;
 
 public class User {
   //Employee basic information
@@ -25,6 +27,7 @@ public class User {
     this.EmployeeId = employeeid;
     this.setAlias("Not Specified");
     this.ActivityMap = new HashMap<Activity, List<String>>();
+    populateActivity();
   }
 
   User(String name, String email, String employeeid, String alias){
@@ -33,6 +36,7 @@ public class User {
     this.EmployeeId = employeeid;
     this.setAlias(alias);
     this.ActivityMap = new HashMap<Activity, List<String>>();
+    populateActivity();
   }
 
   /**
@@ -60,5 +64,21 @@ public class User {
   public void setAlias(String alias) {
     Alias = alias;
   }
+  
+  public List<String> getActivitySensor(String activityName){
+  	for(Entry<Activity, List<String>> e : ActivityMap.entrySet()){
+  		if(e.getKey().getName().equals(activityName)){
+  			return e.getValue();
+  		}
+  	}
+  	
+  	return new ArrayList<String>();
+  }
 
+  public void populateActivity(){
+  	ArrayList<String> sensors = new ArrayList<>();
+  	sensors.add("9025298");
+  	sensors.add("19414433");
+  	ActivityMap.put(new WaterIntake(), sensors);
+  }
 }

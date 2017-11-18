@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import gamiOffice.components.activities.Activity;
@@ -13,11 +15,13 @@ import gamiOffice.components.helper.DBHelper;
 import gamiOffice.components.helper.MqttHelper;
 import gamiOffice.constants.ConstLib;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.json.JsonObject;
 
 public class ActivityController extends AbstractVerticle implements MqttCallback{
 	Challenge challenge;
 	DBHelper dbHelper;
-	MqttHelper MqttClient;
+	MqttHelper MqttHelper;
+	MqttClient client;
 	Activity activity;
 
 	public ActivityController(Challenge challenge, Activity activity){
@@ -33,10 +37,17 @@ public class ActivityController extends AbstractVerticle implements MqttCallback
 			future.complete();
 		}, response -> {
 			//initialize the MQTT topic subscription
-			Set<String> topics = new HashSet<>();
-			topics.add(ConstLib.TOPIC_WATERINTAKE);
-			MqttClient = new MqttHelper(false);
-			MqttClient.subscribe(topics);
+			MqttHelper = new MqttHelper(false);
+			client = MqttHelper.getAliveClient();
+			client.setCallback(this);
+			try {
+				client.subscribe(ConstLib.TOPIC_LIGHT);
+				client.subscribe(ConstLib.TOPIC_WATERINTAKE);
+			} catch (MqttException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("MQTT listener deployed");
 		});
 	}
 
@@ -47,7 +58,15 @@ public class ActivityController extends AbstractVerticle implements MqttCallback
 	
 	@Override
 	public void messageArrived(String topic, MqttMessage message){
-		System.out.println(message.getPayload().toString());
+		System.out.println(topic + new String(message.getPayload()));
+		JsonObject data = new JsonObject(new String(message.getPayload()));
+		if(topic.equals(ConstLib.TOPIC_WATERINTAKE) && data.getString("value_key").equals("Tag") && (data.getString("value_content").equals("19414433") || data.getString("value_content").equals("9025298"))){
+			System.out.println("[before] user: " + challenge.getRank().get(0).getKey() + "score: " + challenge.getRank().get(0).getValue());
+			System.out.println("Begin updating score...");
+			activity.updateScore(challenge, data);
+			System.out.println("Score updated finished!");
+			System.out.println("[after] user: " + challenge.getRank().get(0).getKey() + "score: " + challenge.getRank().get(0).getValue());
+		}
 	}
 
 	@Override

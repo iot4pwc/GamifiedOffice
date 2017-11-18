@@ -8,7 +8,7 @@ public class ConstLib {
 	public static final int HIKARI_PSTMT_CACHE_SIZE = 256;
 	public static final boolean HIKARI_USE_SERVER_PSTMT = true;
 
-	public static final String GAMIFIED_OFFICE = "";
+	public static final String GAMIFIED_OFFICE = "gamified_office";
 	public static final String PRIVATE_KEY_PATH = "";
 	public static final String CERTIFICATE_PATH = "";
 
@@ -24,6 +24,7 @@ public class ConstLib {
 	public static final int MQTT_QUALITY_OF_SERVICE = 2;
 	//topics
 	public static final String TOPIC_WATERINTAKE = "/gamified_office/rfid";
+	public static final String TOPIC_LIGHT = "/gamified_office/light";
 
 	public static final int HTTP_SERVER_PORT= 8090;
 	public static final String PASSWORD_FIELD = "password";

@@ -1,21 +1,21 @@
 package gamiOffice.components.activities;
 
+import gamiOffice.components.general.Challenge;
 import gamiOffice.components.general.User;
+import io.vertx.core.json.JsonObject;
 
 public class SittingDuration extends Activity{
 
 	public static final String COMPONENT_CODE = "SittingDuration";
-
-	@Override
-	public double calculateScore(User u) {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public SittingDuration(){
+		this.ActivityName = COMPONENT_CODE;
 	}
 
 	@Override
-	public double calculateScore() {
+	public void updateScore(Challenge challenge, JsonObject payload) {
 		// TODO Auto-generated method stub
-		return 0;
+		
 	}
 	
 }

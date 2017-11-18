@@ -24,18 +24,18 @@ public class ChallengeController extends AbstractVerticle{
 			future.complete();
 		}, response -> {
 			//initialize the challenge
-			challenge = loadChallenge("");
-			List<Activity> activities = new LinkedList<>(challenge.getWeight().keySet());
+			challenge = loadChallenge("1");
+			List<Activity> activities = new LinkedList<>(challenge.getActivities().values());
 			//deploy activity controller for each of the activity
 			vertx.executeBlocking(future -> {
 	      // first, retrieve token
 				for(Activity activity: activities){
 					vertx.deployVerticle(new ActivityController(challenge, activity));
-					System.out.println("Deploying Controler for activity [" + activity.getName() + "]");
+					System.out.println("Deploying Controler for activity [" + activity.getClass().getName() + "]");
 				}
 				future.complete("All Activity Controller Deployment complete");
 				}, res -> {
-					
+					System.out.println(res.result().toString());
 	    });
 		});
 	}
@@ -45,25 +45,12 @@ public class ChallengeController extends AbstractVerticle{
 		
 	}
 	
-	public Challenge loadChallenge(String Id){
+	private Challenge loadChallenge(String Id){
 		//retrieve the information based on challengeId
-		String queryChallenge = "";
-		List<JsonObject> challengeRes = dbHelper.select(queryChallenge);
-		JsonArray arr = new JsonArray(challengeRes);
-		JsonObject challenge = arr.getJsonObject(0);
-		String challengeId = challenge.getString("");
-		String challengeName = challenge.getString("");
-		Challenge chall = new Challenge(challengeName, challengeId);
-		
-		String queryWeight = "";
-		List<JsonObject> weightRes = dbHelper.select(queryWeight);
-		String queryScore = "";
-		List<JsonObject> UserRes = dbHelper.select(queryScore);
-		
-		chall.setWeight(weightRes);
-		chall.setEmployeeInvolved(UserRes);
-		
-		return chall;
+		Challenge c = new Challenge("some challenge", Id);
+		c.setWeight();
+		c.setEmployeeInvolved();
+		return c;
 	}
 
 }

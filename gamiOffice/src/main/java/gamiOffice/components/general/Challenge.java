@@ -38,6 +38,18 @@ public class Challenge {
 
   }
 
+  public void setScore(String userEmail, String activityName, double scoreToAdd){
+  	System.out.println(this.getClass().getName()+" setscore() called on " + userEmail + " " + activityName + " " + scoreToAdd);
+  	double weight = weights.get(activityName);
+  	double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), weight*scoreToAdd);
+  	System.out.println(this.getClass().getName()+" new todayScore" + scoreToday);
+  	todayScores.get(userEmail).put(activityName,scoreToday);
+  	double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), weight*scoreToAdd);
+  	System.out.println(this.getClass().getName()+" new totalScore" + scoreTotal);
+  	totalScores.get(userEmail).put(activityName,scoreTotal);
+  	System.out.println(this.getClass().getName()+" score all updated");
+  }
+  
   public boolean enroll (String user_id, User user) {
     if (!users.containsKey(user_id)) {
       HashMap<String, Double> tempActivitiesScores = new HashMap<String, Double>();
@@ -86,7 +98,7 @@ public class Challenge {
     return records;
   }
 
-  public void setWeight(List<JsonObject> weights) {
+  public void setWeight() {
     //read from a JsonString in directory when called and populate the map
     List<JsonObject> result = DBHelper.getInstance("gamified_office").select(
         "SELECT component_code, component_weight " +
@@ -95,7 +107,7 @@ public class Challenge {
             "WHERE challenge_id = '" + this.ChallengeId + "';");
 
     for (JsonObject aResult : result) {
-      this.weights.put(aResult.getString("component_code"), aResult.getDouble("component_weight"));
+      this.weights.put(aResult.getString("component_code"), Double.valueOf(aResult.getString("component_weight")));
 
       switch (aResult.getString("component_code")) {
         case SittingDuration.COMPONENT_CODE:
@@ -110,18 +122,24 @@ public class Challenge {
     }
   }
 
+  public Map<String, Activity> getActivities(){
+  	return this.activities;
+  }
   //  public void setWeight(String filename) {
   //    //read from a static file in directory when called and populate the map 
   //  }
 
-  public void setEmployeeInvolved(List<JsonObject> scores) {
+  public Map<String, User> getUserList(){
+  	return this.users;
+  }
+  public void setEmployeeInvolved() {
 
     // Get user information first.
     List<JsonObject> result = DBHelper.getInstance("gamified_office").select(
-        "SELECT email, name, alias, component_code, total_score, today_score "
-            + "FROM user "
+        "SELECT app_user.email, app_user.name, app_user.alias, challenge_component.component_weight, challenge_component.component_code, participant.total_score, participant.today_score "
+            + "FROM app_user "
             + "JOIN participant USING (email) "
-            + "JOIN participant_component USING (challenge_id) "
+            + "JOIN challenge_component USING (challenge_id) "
             + "JOIN participant_component_score USING (component_id) "
             + "WHERE challenge_id = '" + this.ChallengeId + "';");
 
@@ -130,18 +148,18 @@ public class Challenge {
     // Set today's scores 
     for (JsonObject aResult: result) {
       if (todayScores.containsKey(aResult.getString("email"))) {
-        this.todayScores.get(aResult.getString("email")).put(aResult.getString("component_code"), aResult.getDouble("today_score"));
+        this.todayScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
       } else {
         this.todayScores.put(aResult.getString("email"), new HashMap<>());
-        this.todayScores.get(aResult.getString("email")).put(aResult.getString("component_code"), aResult.getDouble("today_score"));
+        this.todayScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
       }
 
       // Set total scores
       if (totalScores.containsKey(aResult.getString("email"))) {
-        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), aResult.getDouble("today_score"));
+        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
       } else {
         this.totalScores.put(aResult.getString("email"), new HashMap<>());
-        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), aResult.getDouble("today_score"));
+        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
       }
 
       // Set user profile
@@ -155,8 +173,10 @@ public class Challenge {
       }
     }
 
+    
     for (JsonObject aResult: result) {
-      this.weights.put(aResult.getString("component_code"), aResult.getDouble("component_weight"));
+    	System.out.println(aResult.toString());
+      this.weights.put(aResult.getString("component_code"), Double.valueOf(aResult.getString("component_weight")));
 
       switch (aResult.getString("component_code")) {
         case SittingDuration.COMPONENT_CODE:
