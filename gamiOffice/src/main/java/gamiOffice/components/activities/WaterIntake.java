@@ -21,6 +21,8 @@ public class WaterIntake extends Activity{
 	public void updateScore(Challenge challenge, JsonObject payload) {
 		// TODO Auto-generated method stub
 		//payload format: {"timestamp":1511025600000,"sensor_pk_id":"59f11b9e3a8fd80d33e14e7c","value_key":"Tag","value_content":"9025298"}
+		
+		//step1: finding the user corresponding the payload
 		String targetUser = "";
 		String id = payload.getString("value_content");
 		System.out.println(this.getClass().getName() + "processing rfid: " + id);
@@ -32,9 +34,11 @@ public class WaterIntake extends Activity{
 				break;
 			}
 		}
+		
+		//step2: calculate and update the score
 		System.out.println(this.getClass().getName() + "found corresponding user: " + targetUser);
 		if(!targetUser.equals("")){
-			challenge.setScore(targetUser, this.getName(), this.GainPerUnit);
+			challenge.setScore(targetUser, this.getName(), this.GainPerUnit*1);
 		}
 	}
 	

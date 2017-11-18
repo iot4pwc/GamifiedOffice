@@ -40,14 +40,24 @@ public class Challenge {
 
   public void setScore(String userEmail, String activityName, double scoreToAdd){
   	System.out.println(this.getClass().getName()+" setscore() called on " + userEmail + " " + activityName + " " + scoreToAdd);
-  	double weight = weights.get(activityName);
-  	double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), weight*scoreToAdd);
+  	double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), scoreToAdd);
   	System.out.println(this.getClass().getName()+" new todayScore" + scoreToday);
   	todayScores.get(userEmail).put(activityName,scoreToday);
-  	double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), weight*scoreToAdd);
+  	double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), scoreToAdd);
   	System.out.println(this.getClass().getName()+" new totalScore" + scoreTotal);
   	totalScores.get(userEmail).put(activityName,scoreTotal);
   	System.out.println(this.getClass().getName()+" score all updated");
+  	
+  	//update the user score in the database
+  	String query = "update participant_component_score set total_score = " + scoreTotal + 
+  			", today_score = "+ scoreToday +
+  			" where component_code = '"+ activityName +
+  			"' and email = '"+ userEmail +"';";
+  	boolean res = DBHelper.getInstance("gamified_office").update(query);
+  	if(!res){
+  		System.out.println("Update Failed on query: " + query);
+  	}
+  	
   }
   
   public boolean enroll (String user_id, User user) {

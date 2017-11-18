@@ -149,6 +149,18 @@ public class DBHelper {
 	    return false;
 	  }
 
+	  public boolean update(String query){
+	  	Statement statement;
+	    try (Connection connection = ds.getConnection()) {
+	      statement = connection.createStatement();
+	      statement.executeUpdate(query);
+	      return true;
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	    }
+	    return false;
+	  }
+	  
 	  public void closeDatasource() {
 	    if (ds != null) {
 	      try {
