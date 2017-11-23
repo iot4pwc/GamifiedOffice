@@ -13,7 +13,8 @@ public class ConstLib {
 	public static final String CERTIFICATE_PATH = "";
 
 	public static final int RESTFUL_SERVICE_NUMBER = 1;
-	public static final int CHALLENGE_CONTROLLER_NUMBER = 1;
+	public static final int CHALLENGE_CONTROLLER_NUMBER = 8;
+	public static final int CHALLENGE_MONITOR_NUMER = 1;
 
 	public static final boolean MQTT_TLS_ENABLED = false;
 	public static final String MQTT_BROKER_STRING = "tcp://%s:1883";
@@ -25,6 +26,7 @@ public class ConstLib {
 	//topics
 	public static final String TOPIC_WATERINTAKE = "/gamified_office/rfid";
 	public static final String TOPIC_LIGHT = "/gamified_office/light";
+	public static final String TOPIC_SITTING = "/gamified_office/sitting";
 
 	public static final int HTTP_SERVER_PORT= 8090;
 	public static final String PASSWORD_FIELD = "password";

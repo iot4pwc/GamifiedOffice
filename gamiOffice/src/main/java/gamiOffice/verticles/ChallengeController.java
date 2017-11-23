@@ -14,7 +14,11 @@ import io.vertx.core.json.JsonObject;
 public class ChallengeController extends AbstractVerticle{
 	Challenge challenge;
 	DBHelper dbHelper;
-	//MqttHelper MqttClient;
+	String challengeId;
+	
+	public ChallengeController(String challengeId){
+		this.challengeId = challengeId;
+	}
 	
 	@Override
 	public void start(){
@@ -24,7 +28,7 @@ public class ChallengeController extends AbstractVerticle{
 			future.complete();
 		}, response -> {
 			//initialize the challenge
-			challenge = loadChallenge("1");
+			challenge = loadChallenge(challengeId);
 			List<Activity> activities = new LinkedList<>(challenge.getActivities().values());
 			//deploy activity controller for each of the activity
 			vertx.executeBlocking(future -> {

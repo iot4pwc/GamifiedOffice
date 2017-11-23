@@ -9,8 +9,8 @@ public class Main {
 
           DeploymentOptions deploymentOptions = new DeploymentOptions().setInstances(ConstLib.RESTFUL_SERVICE_NUMBER);
           vertx.deployVerticle("gamiOffice.verticles.RESTService", deploymentOptions);
-          deploymentOptions = new DeploymentOptions().setInstances(ConstLib.CHALLENGE_CONTROLLER_NUMBER);
-          vertx.deployVerticle("gamiOffice.verticles.ChallengeController", deploymentOptions);
+          deploymentOptions = new DeploymentOptions().setInstances(ConstLib.CHALLENGE_MONITOR_NUMER);
+          vertx.deployVerticle("gamiOffice.verticles.ChallengeMonitor", deploymentOptions);
 
     }
 
