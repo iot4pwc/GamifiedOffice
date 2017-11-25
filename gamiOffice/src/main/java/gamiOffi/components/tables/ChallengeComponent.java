@@ -47,7 +47,7 @@ public class ChallengeComponent extends Queriable {
             case componentId:
             case challengeId:
             case componentWeight:
-              pstmt.setLong(counter++, recordObject.getLong(attributeName));
+              pstmt.setDouble(counter++, recordObject.getLong(attributeName));
               break;
             case componentCode:
             case componentDesc:
