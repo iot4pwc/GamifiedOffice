@@ -6,11 +6,13 @@ sudo chmod 777 /etc/environment
 sudo echo "JAVA_HOME=\"/usr/lib/jvm/java-8-openjdk-amd64/jre\"" >> /etc/environment
 source /etc/environment
 
+# export mysql user name and password
 DB_USER_NAME='iot4pwc'
 export DB_USER_NAME
 DB_USER_PW='Heinz123!'
 export DB_USER_PW
 
+# allow traffic on these two ports
 sudo ufw allow 8080
 sudo ufw allow 37288
 echo "#################################################################################"
