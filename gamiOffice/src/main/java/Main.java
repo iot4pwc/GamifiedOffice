@@ -4,14 +4,14 @@ import io.vertx.core.Vertx;
 
 public class Main {
 
-	public static void main(String[] args) {
-		Vertx vertx = Vertx.vertx();
+    public static void main(String[] args) {
+        Vertx vertx = Vertx.vertx();
 
-	      DeploymentOptions deploymentOptions = new DeploymentOptions().setInstances(ConstLib.RESTFUL_SERVICE_NUMBER);
-	      vertx.deployVerticle("gamiOffice.verticles.RESTService", deploymentOptions);
-	      deploymentOptions = new DeploymentOptions().setInstances(ConstLib.CHALLENGE_CONTROLLER_NUMBER);
-	      vertx.deployVerticle("gamiOffice.verticles.ChallengeController", deploymentOptions);
+          DeploymentOptions deploymentOptions = new DeploymentOptions().setInstances(ConstLib.RESTFUL_SERVICE_NUMBER);
+          vertx.deployVerticle("gamiOffice.verticles.RESTService", deploymentOptions);
+          deploymentOptions = new DeploymentOptions().setInstances(ConstLib.CHALLENGE_MONITOR_NUMER);
+          vertx.deployVerticle("gamiOffice.verticles.ChallengeMonitor", deploymentOptions);
 
-	}
+    }
 
 }

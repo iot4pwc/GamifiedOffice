@@ -104,6 +104,7 @@ public class DBHelper {
 	  public List<JsonObject> select(String query) {
 	    Statement statement;
 	    Connection connection = null;
+            System.out.println("Query to run: " + query);
 	    try {
 	      LinkedList<JsonObject> records = new LinkedList<>();
 
@@ -116,7 +117,7 @@ public class DBHelper {
 	      while (rs.next()) {
 	        JsonObject record = new JsonObject();
 	        for (int i = 1; i <= columnCount; i++) {
-	          String field = rsMetaData.getColumnName(i);
+	          String field = rsMetaData.getColumnLabel(i);
 	          record.put(field, rs.getString(field));
 	        }
 	        records.add(record);
@@ -149,6 +150,18 @@ public class DBHelper {
 	    return false;
 	  }
 
+	  public boolean update(String query){
+	  	Statement statement;
+	    try (Connection connection = ds.getConnection()) {
+	      statement = connection.createStatement();
+	      statement.executeUpdate(query);
+	      return true;
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	    }
+	    return false;
+	  }
+	  
 	  public void closeDatasource() {
 	    if (ds != null) {
 	      try {

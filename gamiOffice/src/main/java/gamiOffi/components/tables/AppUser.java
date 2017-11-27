@@ -19,6 +19,7 @@ public class AppUser extends Queriable {
   public static final String tableName = "app_user";
   public static final String email = "email";
   public static final String name = "name";
+  public static final String profilePic = "profile_pic";
   public static final String alias = "alias";
   public static final String regDate = "reg_date";
   public static final String age = "age";
@@ -50,6 +51,7 @@ public class AppUser extends Queriable {
               pstmt.setLong(counter++, recordObject.getLong(attributeName));
               break;
             case email:
+            case profilePic:
             case name:
             case alias:
             case regDate:
