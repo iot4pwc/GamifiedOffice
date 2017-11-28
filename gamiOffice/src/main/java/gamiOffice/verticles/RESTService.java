@@ -279,7 +279,7 @@ public class RESTService extends AbstractVerticle {
 
   private List<JsonObject> getAllChallenges(String username) {
     String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    String query = "SELECT DISTINCT challenge_id "
+    String query = "SELECT DISTINCT challenge_id, challenge_name "
             + "FROM participant "
             + "JOIN challenge USING (challenge_id) "
             + "WHERE email = '" + username + "' "
