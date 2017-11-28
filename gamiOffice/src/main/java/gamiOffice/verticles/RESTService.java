@@ -133,6 +133,12 @@ public class RESTService extends AbstractVerticle {
     JsonObject profile = getUserProfile(username);
 
     if (profile != null) {
+      profile.put("profileImage", profile.getString("profile_pic"));
+      profile.remove("profile_pic");
+      System.out.println("################################");
+      System.out.println(profile);
+      System.out.println("################################");
+
       routingContext.response()
               .putHeader("content-type", "application/json; charset=utf-8")
               .setStatusCode(200)
@@ -178,6 +184,7 @@ public class RESTService extends AbstractVerticle {
     String username = routingContext.request().getParam(ConstLib.USERNAME_URL_PATTERN);
 
     JsonObject rank = getUserStatsInChallenge(challenge, username);
+
     if (rank != null) {
       routingContext.response()
               .putHeader("content-type", "application/json; charset=utf-8")
@@ -296,8 +303,9 @@ public class RESTService extends AbstractVerticle {
   private boolean updateProfile(String username, JsonObject body) {
     String name = body.getString("name");
     String alias = body.getString("alias");
-    String profile_pic = body.getString("profile_pic");
-    int age = body.getInteger("age");
+    String profile_pic = body.getString("profileImage");
+    String ageString = body.getString("age");
+    int age = ageString.equals("") ? 0 : Integer.parseInt(ageString);
     String query = "UPDATE app_user "
             + "SET age=" + age + ", "
             + "alias='" + alias + "', "
