@@ -41,7 +41,7 @@ public class Challenge {
   public void setScore(String userEmail, String activityName, double scoreToAdd){
   	System.out.println(this.getClass().getName()+" setscore() called on " + userEmail + " " + activityName + " " + scoreToAdd);
   	double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), scoreToAdd);
-  	System.out.println(this.getClass().getName()+" new todayScore" + scoreToday);
+  	System.out.println(this.getClass().getName()+" old todayScore" + todayScores.get(userEmail).get(activityName) + " new todayScore" + scoreToday);
   	todayScores.get(userEmail).put(activityName,scoreToday);
   	double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), scoreToAdd);
   	System.out.println(this.getClass().getName()+" new totalScore" + scoreTotal);
@@ -157,6 +157,7 @@ public class Challenge {
 
     // Set today's scores 
     for (JsonObject aResult: result) {
+    	System.out.println(aResult.toString());
       if (todayScores.containsKey(aResult.getString("email"))) {
         this.todayScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
       } else {
@@ -185,7 +186,7 @@ public class Challenge {
 
     
     for (JsonObject aResult: result) {
-    	System.out.println(aResult.toString());
+    	//System.out.println(aResult.toString());
       this.weights.put(aResult.getString("component_code"), Double.valueOf(aResult.getString("component_weight")));
 
       switch (aResult.getString("component_code")) {
