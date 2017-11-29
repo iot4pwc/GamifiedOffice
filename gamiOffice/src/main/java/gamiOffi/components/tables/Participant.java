@@ -54,7 +54,7 @@ public class Participant extends Queriable {
             case yesterdayScore:
             case lastWeekScore:
             case lastMonthScore:
-              pstmt.setLong(counter++, recordObject.getLong(attributeName));
+              pstmt.setDouble(counter++, recordObject.getLong(attributeName));
               break;
             case email:
               pstmt.setString(counter++, recordObject.getString(attributeName));
