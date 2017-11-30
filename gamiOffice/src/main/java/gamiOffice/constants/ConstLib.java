@@ -1,4 +1,5 @@
 package gamiOffice.constants;
+import org.apache.logging.log4j.Level;
 
 public class ConstLib {
 	public static final String MYSQL_CONNECTION_STRING = "jdbc:mysql://%s/%s?autoReconnect=true&useSSL=false";
@@ -36,4 +37,8 @@ public class ConstLib {
 	public static final String REQUIRED_HEADER_KEY = "secretKey";
 	public static final String REQUIRED_HEADER_VALUE = "secretValue";
 	public static final Double CHALLENGE_INITIAL_SCORE = 0.0;
+	
+	// logger settings
+	public static final Level LOGGING_LEVEL = Level.INFO;
+	public static final String LOGGING_CONFIG = "log4j2.xml";
 }

@@ -10,13 +10,15 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RESTService extends AbstractVerticle {
 
   private DBHelper dbHelper;
+  Logger logger = LogManager.getLogger(RESTService.class);
 
   /**
    * Perform the start routine for this verticle:
@@ -49,7 +51,7 @@ public class RESTService extends AbstractVerticle {
 
       //add any addtional routers below
       vertx.createHttpServer().requestHandler(router::accept).listen(ConstLib.HTTP_SERVER_PORT);
-      System.out.println("RESTful service running on port " + ConstLib.HTTP_SERVER_PORT);
+      logger.info("RESTful service running on port " + ConstLib.HTTP_SERVER_PORT);
     });
 
   }
@@ -135,9 +137,9 @@ public class RESTService extends AbstractVerticle {
     if (profile != null) {
       profile.put("profileImage", profile.getString("profile_pic"));
       profile.remove("profile_pic");
-      System.out.println("################################");
-      System.out.println(profile);
-      System.out.println("################################");
+      logger.info("################################");
+      logger.info(profile);
+      logger.info("################################");
 
       routingContext.response()
               .putHeader("content-type", "application/json; charset=utf-8")
