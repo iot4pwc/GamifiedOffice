@@ -319,14 +319,13 @@ public class RESTService extends AbstractVerticle {
   private JsonObject getUserStatsInChallenge(String challenge, String username) {
     String query = "SELECT "
             + "p.total_score as total_score, "
-            + "cc.component_code as comp, "
+            + "pc.component_code as comp, "
             + "pc.total_score as comp_score, "
-            + "(SELECT p3.rank FROM (SELECT @curRank := @curRank + 1 AS rank, p2.email from participant p2 where p2.challenge_id = '" + challenge + "' ORDER BY p2.total_score DESC) p3 WHERE p3.email='"+username+"') as total_rank "
-            + "FROM participant p "
-            + "JOIN participant_component_score pc USING(email) "
-            + "JOIN challenge_component cc USING(component_id) "
+            + "(SELECT p3.rank FROM (SELECT @curRank := @curRank + 1 AS rank, p2.email from participant_view p2 where p2.challenge_id = '" + challenge + "' ORDER BY p2.total_score DESC) p3 WHERE p3.email='"+username+"') as total_rank "
+            + "FROM participant_view p "
+            + "JOIN participant_component_view pc USING(participant_id) "
             + ", ( SELECT @curRank := 0 ) q "
-            + "WHERE p.challenge_id = '" + challenge + "' AND email = '" + username + "'";
+            + "WHERE p.challenge_id = '" + challenge + "' AND p.email = '" + username + "'";
     List<JsonObject> res = dbHelper.select(query);
     if (res.size() > 0) {
       JsonObject stats = new JsonObject();
@@ -345,7 +344,7 @@ public class RESTService extends AbstractVerticle {
             + "@curRank := @curRank + 1 as rank, "
             + "au.alias as alias, "
             + "p.total_score as total_score "
-            + "FROM participant p "
+            + "FROM participant_view p "
             + "JOIN app_user au USING(email) "
             + ", ( SELECT @curRank := 0 ) q "
             + "WHERE p.challenge_id = '" + challenge + "' "
@@ -369,15 +368,14 @@ public class RESTService extends AbstractVerticle {
   private JsonObject getUserRecentStats(String username) {
     String query = "SELECT "
             + "p.today_score as today_score, "
-            + "challenge_id, "
-            + "cc.component_code as comp, "
+            + "p.challenge_id, "
+            + "pc.component_code as comp, "
             + "pc.today_score as comp_score, "
-            + "(SELECT p3.rank FROM (SELECT @curRank := @curRank + 1 AS rank, p2.email from participant p2 where p2.challenge_id = challenge_id ORDER BY p2.today_score DESC) p3 WHERE p3.email='"+username+"') as total_rank "
-            + "FROM participant p "
-            + "JOIN participant_component_score pc USING(email) "
-            + "JOIN challenge_component cc USING(challenge_id) "
+            + "(SELECT p3.rank FROM (SELECT @curRank := @curRank + 1 AS rank, p2.email from participant_view p2 where p2.challenge_id = challenge_id ORDER BY p2.today_score DESC) p3 WHERE p3.email='"+username+"') as total_rank "
+            + "FROM participant_view p "
+            + "JOIN participant_component_view pc USING(email) "
             + ", ( SELECT @curRank := 0 ) q "
-            + "WHERE email = '" + username + "'";
+            + "WHERE p.email = '" + username + "'";
     List<JsonObject> res = dbHelper.select(query);
     if (res.size() > 0) {
       JsonObject stats = new JsonObject();
@@ -405,17 +403,17 @@ public class RESTService extends AbstractVerticle {
             + "p.yesterday_score as yesterday_score, "
             + "p.last_week_score as last_week_score, "
             + "p.last_month_Score as last_month_score, "
-            + "challenge_id, cc.component_code as comp, "
+            + "p.challenge_id, "
+            + "pc.component_code as comp, "
             + "pc.today_score as comp_today_score, "
             + "pc.yesterday_score as comp_yesterday_score, "
             + "pc.last_week_score as comp_last_week_score, "
             + "pc.last_month_score as comp_last_month_score, "
-            + "(SELECT p3.rank FROM (SELECT @curRank := @curRank + 1 AS rank, p2.email from participant p2 where p2.challenge_id = challenge_id ORDER BY p2.today_score DESC) p3 WHERE p3.email='"+username+"') as total_rank "
-            + "FROM participant p "
-            + "JOIN participant_component_score pc USING(email) "
-            + "JOIN challenge_component cc USING(challenge_id) "
+            + "(SELECT p3.rank FROM (SELECT @curRank := @curRank + 1 AS rank, p2.email from participant_view p2 where p2.challenge_id = challenge_id ORDER BY p2.today_score DESC) p3 WHERE p3.email='"+username+"') as total_rank "
+            + "FROM participant_view p "
+            + "JOIN participant_component_view pc USING(email) "
             + ", ( SELECT @curRank := 0 ) q "
-            + "WHERE email = '" + username + "';";
+            + "WHERE p.email = '" + username + "';";
     List<JsonObject> res = dbHelper.select(query);
     if (res.size() > 0) {
       JsonObject stats = new JsonObject();
