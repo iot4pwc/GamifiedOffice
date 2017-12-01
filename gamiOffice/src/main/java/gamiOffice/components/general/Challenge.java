@@ -139,8 +139,8 @@ public class Challenge {
     // // Get user information first.
     List<JsonObject> result = DBHelper.getInstance("gamified_office").select(
     // Updated query
-      "SELECT app_user.email, app_user.name, app_user.alias, challenge_component.component_weight, challenge_component.component_code, participant_view.total_score, participant_view.today_score "
-      + "FROM app_user JOIN participant USING (email) JOIN challenge_component USING (challenge_id) JOIN participant_view USING (challenge_id, email) WHERE challenge_id = '" + this.ChallengeId + "';");
+      "SELECT app_user.email, app_user.name, app_user.alias, challenge_component.component_weight, challenge_component.component_code, participant_component_view.total_score, participant_component_view.today_score "
+      + "FROM app_user JOIN participant USING (email) JOIN challenge_component USING (challenge_id) JOIN participant_component_view USING (challenge_id, email, component_code) WHERE challenge_id = '" + this.ChallengeId + "';");
 
     // Old query
     // "SELECT app_user.email, app_user.name, app_user.alias, challenge_component.component_weight, challenge_component.component_code, participant.total_score, participant.today_score "
