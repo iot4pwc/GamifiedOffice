@@ -17,8 +17,8 @@ public class Challenge {
   Map<String, HashMap<String, Double>> totalScores;
   Map<String, HashMap<String, Double>> todayScores;
 
-  //	Map<Activity, Double> Weight;
-  //	Map<User, Double> EmployeeInvolved;
+  //  Map<Activity, Double> Weight;
+  //  Map<User, Double> EmployeeInvolved;
 
   String ChallengeId;
   String ChallengeName;
@@ -39,25 +39,15 @@ public class Challenge {
   }
 
   public void setScore(String userEmail, String activityName, double scoreToAdd){
-  	System.out.println(this.getClass().getName()+" setscore() called on " + userEmail + " " + activityName + " " + scoreToAdd);
-  	double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), scoreToAdd);
-  	System.out.println(this.getClass().getName()+" old todayScore" + todayScores.get(userEmail).get(activityName) + " new todayScore" + scoreToday);
-  	todayScores.get(userEmail).put(activityName,scoreToday);
-  	double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), scoreToAdd);
-  	System.out.println(this.getClass().getName()+" new totalScore" + scoreTotal);
-  	totalScores.get(userEmail).put(activityName,scoreTotal);
-  	System.out.println(this.getClass().getName()+" score all updated");
-  	
-  	//update the user score in the database
-  	String query = "update participant_component_score set total_score = " + scoreTotal + 
-  			", today_score = "+ scoreToday +
-  			" where component_code = '"+ activityName +
-  			"' and email = '"+ userEmail +"';";
-  	boolean res = DBHelper.getInstance("gamified_office").update(query);
-  	if(!res){
-  		System.out.println("Update Failed on query: " + query);
-  	}
-  	
+    System.out.println(this.getClass().getName()+" setscore() called on " + userEmail + " " + activityName + " " + scoreToAdd);
+    double weight = weights.get(activityName);
+    double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), weight*scoreToAdd);
+    System.out.println(this.getClass().getName()+" new todayScore" + scoreToday);
+    todayScores.get(userEmail).put(activityName,scoreToday);
+    double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), weight*scoreToAdd);
+    System.out.println(this.getClass().getName()+" new totalScore" + scoreTotal);
+    totalScores.get(userEmail).put(activityName,scoreTotal);
+    System.out.println(this.getClass().getName()+" score all updated");
   }
   
   public boolean enroll (String user_id, User user) {
@@ -133,31 +123,39 @@ public class Challenge {
   }
 
   public Map<String, Activity> getActivities(){
-  	return this.activities;
+    return this.activities;
   }
   //  public void setWeight(String filename) {
   //    //read from a static file in directory when called and populate the map 
   //  }
 
   public Map<String, User> getUserList(){
-  	return this.users;
+    return this.users;
   }
+  
+  
   public void setEmployeeInvolved() {
 
-    // Get user information first.
+    // // Get user information first.
     List<JsonObject> result = DBHelper.getInstance("gamified_office").select(
-        "SELECT app_user.email, app_user.name, app_user.alias, challenge_component.component_weight, challenge_component.component_code, participant.total_score, participant.today_score "
-            + "FROM app_user "
-            + "JOIN participant USING (email) "
-            + "JOIN challenge_component USING (challenge_id) "
-            + "JOIN participant_component_score USING (component_id) "
-            + "WHERE challenge_id = '" + this.ChallengeId + "';");
+    // Updated query
+      "SELECT app_user.email, app_user.name, app_user.alias, challenge_component.component_weight, challenge_component.component_code, participant_component_view.total_score, participant_component_view.today_score "
+      + "FROM app_user JOIN participant USING (email) JOIN challenge_component USING (challenge_id) JOIN participant_component_view USING (challenge_id, email, component_code) WHERE challenge_id = '" + this.ChallengeId + "';");
 
+    // Old query
+    // "SELECT app_user.email, app_user.name, app_user.alias, challenge_component.component_weight, challenge_component.component_code, participant.total_score, participant.today_score "
+    //     + "FROM app_user "
+    //     + "JOIN participant USING (email) "
+    //     + "JOIN challenge_component USING (challenge_id) "
+    //     + "JOIN participant_component_score USING (component_id) "
+    //     + "WHERE challenge_id = '" + this.ChallengeId + "';");
 
 
     // Set today's scores 
     for (JsonObject aResult: result) {
-    	System.out.println(aResult.toString());
+      
+      System.out.println("A result: " + aResult.toString());
+      
       if (todayScores.containsKey(aResult.getString("email"))) {
         this.todayScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
       } else {
@@ -167,10 +165,10 @@ public class Challenge {
 
       // Set total scores
       if (totalScores.containsKey(aResult.getString("email"))) {
-        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
+        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("total_score")));
       } else {
         this.totalScores.put(aResult.getString("email"), new HashMap<>());
-        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
+        this.totalScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("total_score")));
       }
 
       // Set user profile
@@ -183,10 +181,13 @@ public class Challenge {
                 aResult.getString("alias")));
       }
     }
+    
+    System.out.println("Total scores: " + totalScores.toString());
+    System.out.println("Today scores: " + todayScores.toString());
 
     
     for (JsonObject aResult: result) {
-    	//System.out.println(aResult.toString());
+      System.out.println(aResult.toString());
       this.weights.put(aResult.getString("component_code"), Double.valueOf(aResult.getString("component_weight")));
 
       switch (aResult.getString("component_code")) {
