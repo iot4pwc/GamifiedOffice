@@ -43,10 +43,10 @@ public class SittingDuration extends Activity{
 		// TODO Auto-generated method stub
 		//{“timestamp”:1511430000000,“sensor_pk_id”:“59efd0f33a8fd80d3372a7dd”,“value_key”:“value”,“value_content”:“0”}
 		if(payload.getString("value_key").equals("value")){
-			/*//locate the corresponding user
+			//locate the corresponding user
 			String targetUser = "";
 			String sensor = payload.getString("sensor_pk_id");
-			System.out.println(this.getClass().getName() + "processing sitting sensor: " + sensor);
+			System.out.println(this.getClass().getName() + " processing sitting sensor: " + sensor);
 			Set<Entry<String, User>> users= challenge.getUserList().entrySet();
 			for(Entry<String, User> user : users){
 				List<String> sensors = user.getValue().getActivitySensor(this.getName());
@@ -55,13 +55,14 @@ public class SittingDuration extends Activity{
 					break;
 				}
 			}
-			
+			System.out.println("targetUser: " + targetUser);
 			if(!targetUser.equals("")){
 				startTime.putIfAbsent(targetUser, 0l);
 				durations.putIfAbsent(targetUser, 0.0);
 				status.putIfAbsent(targetUser, "0");
 				//check if the status is different;
-				String currStatus = payload.getString("value_content");
+				String currStatus = payload.getString("value_content").equals("0") ? "0" : "1";
+				System.out.println(this.getClass().getName() + " current status is : " + currStatus);
 				String lastStatus = status.get(targetUser);
 				if(!currStatus.equals(lastStatus)){
 					long timeStamp = payload.getLong("timestamp");
@@ -74,6 +75,7 @@ public class SittingDuration extends Activity{
 						//calculate the score
 						System.out.println(this.getClass().getName() + "new period of sitting detected on user: " + targetUser + " for " + durationInMinutes + " minutes");
 						challenge.setScore(targetUser, this.getName(), this.GainPerUnit*durationInMinutes);
+						System.out.println("incremental score: " + this.GainPerUnit*durationInMinutes);
 					}else{
 						//0 --> 1 sitting starts
 						startTime.put(targetUser, timeStamp);
@@ -81,8 +83,7 @@ public class SittingDuration extends Activity{
 					//update the latest status
 					status.put(targetUser, currStatus);
 				}
-			}*/
-			System.out.println("Logic for sitting duration will come soon!");
+			}
 		}
 	}
 

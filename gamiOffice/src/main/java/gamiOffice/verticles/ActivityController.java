@@ -1,14 +1,10 @@
 package gamiOffice.verticles;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
 import gamiOffice.components.activities.Activity;
 import gamiOffice.components.general.Challenge;
 import gamiOffice.components.helper.DBHelper;
@@ -16,6 +12,8 @@ import gamiOffice.components.helper.MqttHelper;
 import gamiOffice.constants.ConstLib;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ActivityController extends AbstractVerticle implements MqttCallback{
 	Challenge challenge;
@@ -23,6 +21,7 @@ public class ActivityController extends AbstractVerticle implements MqttCallback
 	MqttHelper MqttHelper;
 	MqttClient client;
 	Activity activity;
+	Logger logger = LogManager.getLogger(ActivityController.class);
 
 	public ActivityController(Challenge challenge, Activity activity){
 		this.challenge = challenge;
@@ -43,13 +42,12 @@ public class ActivityController extends AbstractVerticle implements MqttCallback
 			try {
 				for(String topic : activity.getTopicSet()){
 					client.subscribe(topic);
-					System.out.println("[" + this.getClass().getName() + "] " + activity.getName() + " now listening to "+ topic);
+					logger.info(activity.getName() + " now listening to "+ topic);
 				}
 			} catch (MqttException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Something went wrong. " + e);
 			}
-			System.out.println("MQTT listener deployed");
+			logger.info("MQTT listener deployed");
 		});
 	}
 
@@ -60,20 +58,17 @@ public class ActivityController extends AbstractVerticle implements MqttCallback
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message){
-		System.out.println(topic + new String(message.getPayload()));
+		logger.info(topic + new String(message.getPayload()));
 		JsonObject data = new JsonObject(new String(message.getPayload()));
-		//System.out.println("[before] user: " + challenge.getRank().get(0).getKey() + "score: " + challenge.getRank().get(0).getValue());
-		System.out.println("Begin updating score...");
+		logger.info("Begin updating score...");
 		activity.updateScore(challenge, data);
-		System.out.println("Score updated finished!");
-		//System.out.println("[after] user: " + challenge.getRank().get(0).getKey() + "score: " + challenge.getRank().get(0).getValue());
-		//}
+		logger.info("Score updated finished!");
 	}
 
 	@Override
 	public void connectionLost(Throwable arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("Lost connection with MQTT " + arg0.getMessage());
+		logger.error("Lost connection with MQTT " + arg0.getMessage());
 
 	}
 
