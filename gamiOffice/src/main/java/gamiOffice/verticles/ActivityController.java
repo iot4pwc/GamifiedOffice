@@ -6,6 +6,8 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import gamiOffice.components.activities.Activity;
+import gamiOffice.components.activities.SittingDuration;
+import gamiOffice.components.activities.WaterIntake;
 import gamiOffice.components.general.Challenge;
 import gamiOffice.components.helper.DBHelper;
 import gamiOffice.components.helper.MqttHelper;
@@ -23,9 +25,20 @@ public class ActivityController extends AbstractVerticle implements MqttCallback
 	Activity activity;
 	Logger logger = LogManager.getLogger(ActivityController.class);
 
-	public ActivityController(Challenge challenge, Activity activity){
+	public ActivityController(Challenge challenge, String activity){
 		this.challenge = challenge;
-		this.activity = activity.getInstance();
+		//switch to get singleton activity instance
+		switch (activity) {
+		case WaterIntake.COMPONENT_CODE:
+			this.activity = WaterIntake.getInstance();
+			break;
+		case SittingDuration.COMPONENT_CODE:
+			this.activity = SittingDuration.getInstance();
+			break;
+		default:
+			System.out.println("No matching activity found.");
+			break;
+		}
 	}
 
 	@Override

@@ -25,5 +25,5 @@ public abstract class Activity {
 
 	public abstract void updateScore(Challenge challenge, JsonObject payload);
 	
-	public abstract Activity getInstance();
+	
 }

@@ -1,8 +1,6 @@
 package gamiOffice.components.activities;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +9,7 @@ import java.util.Map.Entry;
 
 import gamiOffice.components.general.Challenge;
 import gamiOffice.components.general.User;
+import gamiOffice.components.helper.DBHelper;
 import gamiOffice.constants.ConstLib;
 import io.vertx.core.json.JsonObject;
 
@@ -19,7 +18,7 @@ public class SittingDuration extends Activity{
 	private static SittingDuration sittingDuration;
 	public static final String COMPONENT_CODE = "SITTING_DURATION";
 	//key should always be user email
-	public Map<String, Double> durations;
+	public Map<String, Integer> durations;
 	public Map<String, Long> startTime;
 	public Map<String, String> status;
 
@@ -33,9 +32,20 @@ public class SittingDuration extends Activity{
 	
 	//this will do some more stuff
 	private void loadDurations(){
-		durations = new HashMap<String, Double>();
+		durations = new HashMap<String, Integer>();
 		startTime = new HashMap<String, Long>();
 		status = new HashMap<String, String>();
+		String query = "select * from sitting_status;";
+		List<JsonObject> result = DBHelper.getInstance("gamified_office").select(query);
+		for (JsonObject aResult: result) {
+			System.out.println(aResult.toString());
+			String email = aResult.getString("email");
+			Timestamp ts = Timestamp.valueOf(aResult.getString("start_time"));
+			long tsTime = ts.getTime();
+			durations.put(email, Integer.parseInt(aResult.getString("duration")));
+			startTime.put(email, tsTime);
+			status.put(email, aResult.getString("status"));
+		}
 	}
 
 	@Override
@@ -58,7 +68,7 @@ public class SittingDuration extends Activity{
 			System.out.println("targetUser: " + targetUser);
 			if(!targetUser.equals("")){
 				startTime.putIfAbsent(targetUser, 0l);
-				durations.putIfAbsent(targetUser, 0.0);
+				durations.putIfAbsent(targetUser, 0);
 				status.putIfAbsent(targetUser, "0");
 				//check if the status is different;
 				String currStatus = payload.getString("value_content").equals("0") ? "0" : "1";
@@ -70,8 +80,11 @@ public class SittingDuration extends Activity{
 					//1 --> 0 current duration ends
 					//the default value for sitting of the day is 1
 					if(currStatus.equals("0")){
-						double durationInMinutes = (double) (timeStamp - startTime.get(targetUser)) / 6000;
+						int durationInMinutes = (int) ((timeStamp - startTime.get(targetUser)) / 6000);
 						durations.put(targetUser, durations.get(targetUser)+durationInMinutes);
+						String query = "update sitting_status set duration = "+ durations.get(targetUser) +" where email = '"+ targetUser +"';";
+						DBHelper.getInstance(ConstLib.GAMIFIED_OFFICE).update(query);
+						System.out.println(this.getClass().getName()+ " new duration saved to database");
 						//calculate the score
 						System.out.println(this.getClass().getName() + "new period of sitting detected on user: " + targetUser + " for " + durationInMinutes + " minutes");
 						challenge.setScore(targetUser, this.getName(), this.GainPerUnit*durationInMinutes);
@@ -79,16 +92,21 @@ public class SittingDuration extends Activity{
 					}else{
 						//0 --> 1 sitting starts
 						startTime.put(targetUser, timeStamp);
+						String query = "update sitting_status set start_time = "+ timeStamp +" where email = '"+ targetUser +"';";
+						DBHelper.getInstance(ConstLib.GAMIFIED_OFFICE).update(query);
+						System.out.println(this.getClass().getName()+ " new startTime saved to database");
 					}
 					//update the latest status
 					status.put(targetUser, currStatus);
+					String query = "update sitting_status set status = '"+ currStatus +"' where email = '"+ targetUser +"';";
+					DBHelper.getInstance(ConstLib.GAMIFIED_OFFICE).update(query);
+					System.out.println(this.getClass().getName()+ " new status saved to database");
 				}
 			}
 		}
 	}
 
-	@Override
-	public Activity getInstance() {
+	public static Activity getInstance() {
 		if(SittingDuration.sittingDuration == null){
 			SittingDuration.sittingDuration = new SittingDuration();
 		}

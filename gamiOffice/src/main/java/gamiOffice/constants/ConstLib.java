@@ -41,4 +41,6 @@ public class ConstLib {
 	// logger settings
 	public static final Level LOGGING_LEVEL = Level.INFO;
 	public static final String LOGGING_CONFIG = "log4j2.xml";
+	
+	public static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
 }

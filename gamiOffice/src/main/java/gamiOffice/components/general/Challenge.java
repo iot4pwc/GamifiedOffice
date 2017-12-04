@@ -2,6 +2,7 @@ package gamiOffice.components.general;
 
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import gamiOffice.components.activities.Activity;
 import gamiOffice.components.activities.SittingDuration;
@@ -11,15 +12,12 @@ import gamiOffice.components.helper.DBHelper;
 import io.vertx.core.json.JsonObject;
 
 public class Challenge {
-  Map<String, Activity> activities;
+  //List<String> activities;
   Map<String, Double> weights;
   Map<String, User> users;
   Map<String, HashMap<String, Double>> totalScores;
   Map<String, HashMap<String, Double>> todayScores;
-
-  //  Map<Activity, Double> Weight;
-  //  Map<User, Double> EmployeeInvolved;
-
+  
   String ChallengeId;
   String ChallengeName;
   Date ChallengeStartDate;
@@ -30,7 +28,7 @@ public class Challenge {
     //?or can be auto set
     this.ChallengeId = id;
 
-    this.activities = new HashMap<String, Activity>();
+    //this.activities = new List;
     this.weights = new HashMap<String, Double>();
     this.users = new HashMap<String, User>();
     this.totalScores = new HashMap<String, HashMap<String, Double>>();
@@ -40,20 +38,30 @@ public class Challenge {
 
   public void setScore(String userEmail, String activityName, double scoreToAdd){
     System.out.println(this.getClass().getName()+" setscore() called on " + userEmail + " " + activityName + " " + scoreToAdd);
-    double weight = weights.get(activityName);
-    double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), weight*scoreToAdd);
+    //double weight = weights.get(activityName);
+    System.out.println("old score: " + todayScores.get(userEmail).get(activityName));
+    double scoreToday = Double.sum(todayScores.get(userEmail).get(activityName), scoreToAdd);
     System.out.println(this.getClass().getName()+" new todayScore" + scoreToday);
     todayScores.get(userEmail).put(activityName,scoreToday);
-    double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), weight*scoreToAdd);
+    
+    //sync score with database
+    String currDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    System.out.print("currDate");
+    String query = "update participant_component_score set score = "+ scoreToday +" where component_code = '"+ activityName +"' and score_date = '" + currDate + "' and email = '"+ userEmail +"'";
+    System.out.println(query);
+    DBHelper.getInstance("gamified_office").update(query);
+    //removed due to logic change - not updating total score
+    /*double scoreTotal = Double.sum(totalScores.get(userEmail).get(activityName), weight*scoreToAdd);
     System.out.println(this.getClass().getName()+" new totalScore" + scoreTotal);
-    totalScores.get(userEmail).put(activityName,scoreTotal);
+    totalScores.get(userEmail).put(activityName,scoreTotal);*/
+    
     System.out.println(this.getClass().getName()+" score all updated");
   }
   
   public boolean enroll (String user_id, User user) {
     if (!users.containsKey(user_id)) {
       HashMap<String, Double> tempActivitiesScores = new HashMap<String, Double>();
-      for (String activity_id: activities.keySet()) {
+      for (String activity_id: weights.keySet()) {
         tempActivitiesScores.put(activity_id, ConstLib.CHALLENGE_INITIAL_SCORE);
       }
       totalScores.put(user_id, tempActivitiesScores);
@@ -92,9 +100,6 @@ public class Challenge {
     List<Map.Entry<User, Double>> records = new ArrayList<Entry<User, Double>>(tempUserScores.entrySet());
     Collections.sort(records, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
 
-    // Testing
-    System.out.println(records.toString());
-
     return records;
   }
 
@@ -108,7 +113,7 @@ public class Challenge {
 
     for (JsonObject aResult : result) {
       this.weights.put(aResult.getString("component_code"), Double.valueOf(aResult.getString("component_weight")));
-
+/*
       switch (aResult.getString("component_code")) {
         case SittingDuration.COMPONENT_CODE:
           activities.put(aResult.getString("component_code"), new SittingDuration());
@@ -118,16 +123,13 @@ public class Challenge {
           break;
         default:
           System.out.println("Activity not found, no corresponding component_code");
-      }
+      }*/
     }
   }
 
-  public Map<String, Activity> getActivities(){
-    return this.activities;
+  public List<String> getActivities(){
+    return new LinkedList<String>(this.weights.keySet());
   }
-  //  public void setWeight(String filename) {
-  //    //read from a static file in directory when called and populate the map 
-  //  }
 
   public Map<String, User> getUserList(){
     return this.users;
@@ -152,10 +154,7 @@ public class Challenge {
 
 
     // Set today's scores 
-    for (JsonObject aResult: result) {
-      
-      System.out.println("A result: " + aResult.toString());
-      
+    for (JsonObject aResult: result) {     
       if (todayScores.containsKey(aResult.getString("email"))) {
         this.todayScores.get(aResult.getString("email")).put(aResult.getString("component_code"), Double.valueOf(aResult.getString("today_score")));
       } else {
@@ -182,24 +181,8 @@ public class Challenge {
       }
     }
     
-    System.out.println("Total scores: " + totalScores.toString());
-    System.out.println("Today scores: " + todayScores.toString());
-
-    
     for (JsonObject aResult: result) {
-      System.out.println(aResult.toString());
       this.weights.put(aResult.getString("component_code"), Double.valueOf(aResult.getString("component_weight")));
-
-      switch (aResult.getString("component_code")) {
-        case SittingDuration.COMPONENT_CODE:
-          activities.put(aResult.getString("component_code"), new SittingDuration());
-          break;
-        case WaterIntake.COMPONENT_CODE:
-          activities.put(aResult.getString("component_code"), new WaterIntake());
-          break;
-        default:
-          System.out.println("Activity not found, no corresponding component_code");
-      }
     }
   }
 }

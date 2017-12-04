@@ -104,7 +104,7 @@ public class DBHelper {
 	  public List<JsonObject> select(String query) {
 	    Statement statement;
 	    Connection connection = null;
-            System.out.println("Query to run: " + query);
+            //System.out.println("Query to run: " + query);
 	    try {
 	      LinkedList<JsonObject> records = new LinkedList<>();
 

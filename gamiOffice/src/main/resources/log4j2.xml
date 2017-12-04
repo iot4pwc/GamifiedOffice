@@ -12,6 +12,7 @@
 	<Loggers> 
 		<Root level="error">
 			<AppenderRef ref="MyFile"/>
+			<AppenderRef ref="Console"/>
 		</Root>
 	</Loggers> 
 	

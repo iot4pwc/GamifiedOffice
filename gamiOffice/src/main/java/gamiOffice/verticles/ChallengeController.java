@@ -29,13 +29,13 @@ public class ChallengeController extends AbstractVerticle{
 		}, response -> {
 			//initialize the challenge
 			challenge = loadChallenge(challengeId);
-			List<Activity> activities = new LinkedList<>(challenge.getActivities().values());
+			List<String> activities = new LinkedList<>(challenge.getActivities());
 			//deploy activity controller for each of the activity
 			vertx.executeBlocking(future -> {
 	            // first, retrieve token
-				for(Activity activity: activities){
+				for(String activity: activities){
 					vertx.deployVerticle(new ActivityController(challenge, activity));
-					logger.info("Deploying Controler for activity [" + activity.getClass().getName() + "]");
+					logger.info("Deploying Controler for activity [" + activity + "]");
 				}
 				future.complete("All Activity Controller Deployment complete");
 				logger.info("All Activity Controller Deployment complete");

@@ -51,8 +51,7 @@ public class WaterIntake extends Activity{
 		}
 	}
 
-	@Override
-	public Activity getInstance() {
+	public static Activity getInstance() {
 		if(WaterIntake.waterIntake == null){
 			WaterIntake.waterIntake = new WaterIntake();
 		}
